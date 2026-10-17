@@ -94,7 +94,7 @@ def downloadPapers(papers, dwnl_dir, num_limit, SciHub_URL=None, SciDB_URL=None)
                         if (dwn_source == 1 or dwn_source == 2) and 'application/pdf' not in content_type and "application/octet-stream" not in content_type:
                             time.sleep(random.randint(1, 4))
 
-                            pdf_link = getSchiHubPDF(r.text)
+                            pdf_link = getSchiHubPDF(r.text, r.url)
                             if pdf_link is not None:
                                 r = requests.get(pdf_link, headers=NetInfo.HEADERS)
                                 content_type = r.headers.get('content-type')

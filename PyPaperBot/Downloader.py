@@ -9,13 +9,18 @@ from .Utils import URLjoin
 
 def setSciHubUrl():
     print("Searching for a sci-hub mirror")
-    r = requests.get(NetInfo.SciHub_URLs_repo, headers=NetInfo.HEADERS)
-    links = SciHubUrls(r.text)
+    links = []
+    try:
+        r = requests.get(NetInfo.SciHub_URLs_repo, headers=NetInfo.HEADERS, timeout=15)
+        links = SciHubUrls(r.text)
+    except Exception:
+        print("Mirror list unavailable, using built-in mirrors")
+    links += [m for m in NetInfo.SciHub_fallback_mirrors if m not in links]
 
     for l in links:
         try:
             print("Trying with {}...".format(l))
-            r = requests.get(l, headers=NetInfo.HEADERS)
+            r = requests.get(l, headers=NetInfo.HEADERS, timeout=15)
             if r.status_code == 200:
                 NetInfo.SciHub_URL = l
                 break

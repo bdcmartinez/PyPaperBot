@@ -5,6 +5,7 @@ Created on Mon Jun  8 21:43:30 2020
 @author: Vito
 """
 import bibtexparser
+from bibtexparser.bparser import BibTexParser
 import re
 import pandas as pd
 import urllib.parse
@@ -41,10 +42,16 @@ class Paper:
                 return "none.pdf"
 
     def setBibtex(self, bibtex):
-        x = bibtexparser.loads(bibtex, parser=None)
-        x = x.entries
-
         self.bibtex = bibtex
+
+        # Crossref emits unquoted full month names (month=july), which
+        # bibtexparser 1.x only knows as three-letter abbreviations
+        normalized = re.sub(r"(month\s*=\s*)([A-Za-z]{3})[A-Za-z]*(?=\s*[,}])",
+                            lambda m: m.group(1) + m.group(2).lower(), bibtex)
+        try:
+            x = bibtexparser.loads(normalized, parser=BibTexParser(common_strings=True)).entries
+        except Exception:
+            x = [{}]
 
         try:
             if "year" in x[0]:

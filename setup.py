@@ -19,7 +19,7 @@ setuptools.setup(
   install_requires=[          
         'astroid>=2.4.2,<=2.5',
         'beautifulsoup4>=4.9.1',
-        'bibtexparser>=1.2.0',
+        'bibtexparser>=1.2.0,<2',
         'certifi>=2020.6.20',
         'chardet>=3.0.4',
         'colorama>=0.4.3',
